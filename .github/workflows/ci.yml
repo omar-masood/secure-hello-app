@@ -22,3 +22,10 @@ jobs:
 
       - name: Run tests
         run: python -m pytest
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        run: echo "Deploying application..."
