@@ -31,9 +31,27 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t secure-hello-app .          
+        run: docker build -t secure-hello-app .
+  security:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t secure-hello-app .
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: secure-hello-app:latest
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          ignore-unfixed: true
   deploy:
-    needs: test
+    needs: security
     runs-on: ubuntu-latest
 
     steps:
